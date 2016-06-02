@@ -1,4 +1,19 @@
 describe("app", function() {
+
+  var mock = require('protractor-http-mock');
+
+  beforeEach(function(){
+    mock([{
+      request: {
+        path: 'http://quiet-beach-24792.herokuapp.com/todos.json',
+        method: 'GET'
+      },
+      response: {
+        data: [{text: "ToDo1", completed: true}, {text: "ToDo2", completed: false}]
+      }
+    }]);
+  });
+
   it('has a todo',function(){
     browser.get('/');
     var todos = $$('#todos p');
@@ -28,5 +43,9 @@ describe("app", function() {
     var todo = $$('#todos p').last();
     todo.element(by.css('.complete')).click();
     expect(todo.getText()).toMatch("ToDo2: completed");
+  });
+
+  afterEach(function(){
+    mock.teardown();
   });
 });

@@ -2,10 +2,15 @@ describe('ToDoController', function() {
   beforeEach(module('toDoApp'));
 
   var ctrl, ToDoFactory;
+  var toDoData = [{text: "ToDo1", completed: true}, {text: "ToDo2", completed: false}];
 
-  beforeEach(inject(function($controller, _ToDoFactory_) {
+  beforeEach(inject(function($httpBackend, $controller, _ToDoFactory_) {
     ctrl = $controller('ToDoController');
     ToDoFactory = _ToDoFactory_;
+    httpBackend = $httpBackend;
+
+    httpBackend.expectGET("http://quiet-beach-24792.herokuapp.com/todos.json").respond(toDoData);
+    httpBackend.flush();
   }));
 
   it('initialises with severals todos', function() {
